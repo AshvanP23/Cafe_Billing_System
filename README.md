@@ -1,6 +1,6 @@
 Cafe Billing System 
 
-Features :
+Features:
 
 - Menu display
 - Add/remove items from cart
