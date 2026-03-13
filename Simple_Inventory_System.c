@@ -18,7 +18,7 @@ struct Product inventory[MAX] = {
     {3,"Burger",120,60},
     {4,"Pizza",250,40},
     {5,"Sandwich",90,80},
-    {6,"Fries",110,70},
+    {6,"Fries",110,75},
     {7,"ColdDrink",60,100},
     {8,"IceCream",80,90}
 };
