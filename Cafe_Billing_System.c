@@ -13,18 +13,17 @@ struct Product {
 };
 
 struct Product inventory[MAX] = {
-    {1,"Coffee",40,100},
-    {2,"Tea",20,120},
-    {3,"Burger",120,60},
-    {4,"Pizza",250,40},
-    {5,"Sandwich",90,80},
-    {6,"Fries",110,70},
-    {7,"ColdDrink",60,100},
-    {8,"IceCream",80,90}
+    {1, "Coffee", 40.0, 100},
+    {2, "Tea", 20.0, 120},
+    {3, "Burger", 120.0, 60},
+    {4, "Pizza", 250.0, 40},
+    {5, "Sandwich", 90.0, 80},
+    {6, "Fries", 110.0, 70},
+    {7, "ColdDrink", 60.0, 100},
+    {8, "IceCream", 80.0, 90}
 };
 
 struct Product cart[MAX];
-
 int cartCount = 0;
 
 void showMenu();
@@ -35,178 +34,165 @@ void removeFromCart();
 void searchProduct();
 void checkout();
 
-int main()
-{
+int main() {
     int option;
 
-    while(1)
-    {
+    while(1) {
         showMenu();
-        printf("Enter option: ");
-        scanf("%d",&option);
+        printf("\nEnter option: ");
+        scanf("%d", &option);
 
-        switch(option)
-        {
+        switch(option) {
             case 1:
                 showInventory();
                 break;
-
             case 2:
                 addToCart();
                 break;
-
             case 3:
                 showCart();
                 break;
-
             case 4:
                 removeFromCart();
                 break;
-
             case 5:
                 searchProduct();
                 break;
-
             case 6:
                 checkout();
-                return 0;
-
+                break;
             case 7:
-                printf("Thank you. Visit again!\n");
+                printf("\nThank you. Visit again!\n");
                 return 0;
-
             default:
-                printf("Invalid option\n");
+                printf("\nInvalid option. Please try again.\n");
         }
     }
 }
 
-void showMenu()
-{
+void showMenu() {
     printf("\n====== CAFE BILLING SYSTEM ======\n");
-    printf("1. Show Menu\n");
+    printf("1. Show Menu & Stock\n");
     printf("2. Add Item to Cart\n");
     printf("3. Show Cart\n");
     printf("4. Remove Item from Cart\n");
     printf("5. Search Product\n");
-    printf("6. Checkout\n");
+    printf("6. Checkout & Print Bill\n");
     printf("7. Exit\n");
+    printf("=================================\n");
 }
 
-void showInventory()
-{
-    printf("\n----------- MENU -----------\n");
-    printf("ID\tNAME\t\tPRICE\tSTOCK\n");
+void showInventory() {
+    printf("\n------------------ CAFE MENU ------------------\n");
+    printf("ID\tNAME\t\tPRICE\t\tSTOCK\n");
+    printf("-----------------------------------------------\n");
 
-    for(int i=0;i<MAX;i++)
-    {
-        printf("%d\t%-12s\t%.2f\t%d\n",
+    for(int i = 0; i < MAX; i++) {
+        printf("%d\t%-12s\tRs. %.2f\t%d\n",
         inventory[i].id,
         inventory[i].name,
         inventory[i].price,
         inventory[i].quantity);
     }
+    printf("-----------------------------------------------\n");
 }
 
-void addToCart()
-{
-    int id,qty;
+void addToCart() {
+    int id, qty;
 
-    if(cartCount>=MAX)
-    {
-        printf("Cart full\n");
+    if(cartCount >= MAX) {
+        printf("\nCart is full!\n");
         return;
     }
 
     printf("Enter product ID: ");
-    scanf("%d",&id);
+    scanf("%d", &id);
 
-    for(int i=0;i<MAX;i++)
-    {
-        if(inventory[i].id==id)
-        {
+    for(int i = 0; i < MAX; i++) {
+        if(inventory[i].id == id) {
             printf("Enter quantity: ");
-            scanf("%d",&qty);
+            scanf("%d", &qty);
 
-            if(qty>inventory[i].quantity)
-            {
-                printf("Not enough stock\n");
+            if(qty > inventory[i].quantity) {
+                printf("\nNot enough stock available! Only %d left.\n", inventory[i].quantity);
                 return;
             }
 
-            cart[cartCount]=inventory[i];
-            cart[cartCount].quantity=qty;
-
-            inventory[i].quantity-=qty;
-
+            cart[cartCount] = inventory[i];
+            cart[cartCount].quantity = qty;
+            inventory[i].quantity -= qty;
             cartCount++;
 
-            printf("Item added to cart\n");
+            printf("\nItem added to cart successfully!\n");
             return;
         }
     }
-
-    printf("Product not found\n");
+    printf("\nProduct ID not found!\n");
 }
 
-void showCart()
-{
-    printf("\n------ CART ------\n");
-
-    if(cartCount==0)
-    {
-        printf("Cart empty\n");
+void showCart() {
+    if(cartCount == 0) {
+        printf("\nCart is empty!\n");
         return;
     }
 
-    printf("ID\tNAME\t\tPRICE\tQTY\n");
+    printf("\n------------------ YOUR CART ------------------\n");
+    printf("ID\tNAME\t\tPRICE\t\tQTY\n");
+    printf("-----------------------------------------------\n");
 
-    for(int i=0;i<cartCount;i++)
-    {
-        printf("%d\t%-12s\t%.2f\t%d\n",
+    for(int i = 0; i < cartCount; i++) {
+        printf("%d\t%-12s\tRs. %.2f\t%d\n",
         cart[i].id,
         cart[i].name,
         cart[i].price,
         cart[i].quantity);
     }
+    printf("-----------------------------------------------\n");
 }
 
-void removeFromCart()
-{
+void removeFromCart() {
     int id;
 
-    printf("Enter product ID to remove: ");
-    scanf("%d",&id);
+    if(cartCount == 0) {
+        printf("\nCart is already empty!\n");
+        return;
+    }
 
-    for(int i=0;i<cartCount;i++)
-    {
-        if(cart[i].id==id)
-        {
-            for(int j=i;j<cartCount-1;j++)
-                cart[j]=cart[j+1];
+    printf("Enter product ID to remove: ");
+    scanf("%d", &id);
+
+    for(int i = 0; i < cartCount; i++) {
+        if(cart[i].id == id) {
+            
+            for(int k = 0; k < MAX; k++) {
+                if(inventory[k].id == id) {
+                    inventory[k].quantity += cart[i].quantity;
+                    break;
+                }
+            }
+
+            for(int j = i; j < cartCount - 1; j++) {
+                cart[j] = cart[j + 1];
+            }
 
             cartCount--;
-
-            printf("Item removed\n");
+            printf("\nItem removed from cart and stock restored!\n");
             return;
         }
     }
-
-    printf("Item not found in cart\n");
+    printf("\nItem not found in cart!\n");
 }
 
-void searchProduct()
-{
+void searchProduct() {
     char name[30];
 
-    printf("Enter product name: ");
-    scanf("%s",name);
+    printf("Enter product name to search: ");
+    scanf("%s", name);
 
-    for(int i=0;i<MAX;i++)
-    {
-        if(strcmp(inventory[i].name,name)==0)
-        {
-            printf("Found: %d %s %.2f Stock:%d\n",
+    for(int i = 0; i < MAX; i++) {
+        if(strcasecmp(inventory[i].name, name) == 0) {
+            printf("\n--- Product Found ---\n");
+            printf("ID: %d\nName: %s\nPrice: Rs. %.2f\nStock Available: %d\n",
             inventory[i].id,
             inventory[i].name,
             inventory[i].price,
@@ -214,49 +200,50 @@ void searchProduct()
             return;
         }
     }
-
-    printf("Product not found\n");
+    printf("\nProduct not found!\n");
 }
 
-void checkout()
-{
-    float subtotal=0;
+void checkout() {
+    float subtotal = 0;
 
-    if(cartCount==0)
-    {
-        printf("Cart empty\n");
+    if(cartCount == 0) {
+        printf("\nCannot checkout. Cart is empty!\n");
         return;
     }
 
-    printf("\n========== BILL ==========\n");
-
     srand(time(0));
-    printf("Bill No: %d\n",rand()%1000);
+    int billNo = rand() % 10000 + 1000;
 
-    printf("ID\tNAME\t\tPRICE\tQTY\tTOTAL\n");
+    printf("\n==================== CAFE RECEIPT ====================\n");
+    printf("Bill No: %d\n", billNo);
+    printf("------------------------------------------------------\n");
+    printf("ID\tNAME\t\tPRICE\t\tQTY\tTOTAL\n");
+    printf("------------------------------------------------------\n");
 
-    for(int i=0;i<cartCount;i++)
-    {
-        float total=cart[i].price*cart[i].quantity;
+    for(int i = 0; i < cartCount; i++) {
+        float total = cart[i].price * cart[i].quantity;
 
-        printf("%d\t%-12s\t%.2f\t%d\t%.2f\n",
+        printf("%d\t%-12s\tRs. %.2f\t%d\tRs. %.2f\n",
         cart[i].id,
         cart[i].name,
         cart[i].price,
         cart[i].quantity,
         total);
 
-        subtotal+=total;
+        subtotal += total;
     }
 
-    float gst=subtotal*0.05;
-    float final=subtotal+gst;
+    float gst = subtotal * 0.05;
+    float finalAmount = subtotal + gst;
 
-    printf("-----------------------------\n");
-    printf("Subtotal: %.2f\n",subtotal);
-    printf("GST (5%%): %.2f\n",gst);
-    printf("Total Amount: %.2f\n",final);
-    printf("-----------------------------\n");
+    printf("------------------------------------------------------\n");
+    printf("Subtotal:\t\t\t\tRs. %.2f\n", subtotal);
+    printf("GST (5%%):\t\t\t\tRs. %.2f\n", gst);
+    printf("------------------------------------------------------\n");
+    printf("FINAL AMOUNT TO PAY:\t\t\tRs. %.2f\n", finalAmount);
+    printf("======================================================\n");
+    printf("          Thank you for visiting our cafe!            \n");
+    printf("======================================================\n\n");
 
-    printf("Thank you for visiting our cafe!\n");
+    cartCount = 0;
 }
